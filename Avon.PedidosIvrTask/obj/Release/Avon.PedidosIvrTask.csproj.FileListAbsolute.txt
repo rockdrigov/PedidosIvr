@@ -1,0 +1,11 @@
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\Avon.PedidosIvrTask.exe.config
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\Avon.PedidosIvrTask.exe
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\Avon.PedidosIvrTask.pdb
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\DiffieHellman.dll
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\ICSharpCode.SharpZipLib.dll
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\log4net.dll
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\Org.Mentalis.Security.dll
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\Tamir.SharpSSH.dll
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\bin\Release\log4net.xml
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\obj\Release\Avon.PedidosIvrTask.exe
+C:\Users\Rodrigo\Desktop\Moises\Code\Avon.PedidosIvrTask\Avon.PedidosIvrTask\obj\Release\Avon.PedidosIvrTask.pdb
