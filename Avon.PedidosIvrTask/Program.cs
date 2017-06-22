@@ -15,15 +15,21 @@ namespace Avon.PedidosIvrTask
 
         static void Main(string[] args)
         {
+            _log.Info("Iniciando procesamiento de pedidos...");
+
             //Numero de pedidos en cada paquete, valor por default
             int pedidosPorPaquete = 30;
-
             Int32.TryParse(ConfigurationManager.AppSettings["PedidosPorPaquete"], out pedidosPorPaquete);
 
             var grupos = _pedidosService.GeneraGrupos(1);
-
-            _log.Info("Iniciando procesamiento de pedidos...");
-
+            foreach(var grupo in grupos)
+            {
+                foreach(var encabezado in grupo.Encabezados)
+                {
+                    _log.InfoFormat("Procesando archivo: {0}", encabezado.Nombre);
+                }
+            }
+            
             _log.InfoFormat("Se procesaran {0} grupos distintos", grupos.Count);
 
             _log.Info("Procesamiento de pedidos completo");

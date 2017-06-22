@@ -13,15 +13,16 @@ namespace Avon.PedidosIvr.Business.Services
         {
             var grupos = GetGruposPorEnviar();
             //var gruposProcesados = new List<Grupo>();
+            int consecutivo = 1;
 
-            foreach(var grupo in grupos)
+            foreach (var grupo in grupos)
             {
-                int consecutivo = 1;
                 var transacciones = _pedidosRepository.GetTransaccionesPorEnviar(grupo.Zona, grupo.Campana);
                 bool nuevoEncabezado = false;
 
                 grupo.Encabezados = new List<Encabezado>();
                 var encabezado = new Encabezado(consecutivo);
+                encabezado.Grupo = grupo;
 
                 foreach (var transaccion in transacciones)
                 {
@@ -32,6 +33,7 @@ namespace Avon.PedidosIvr.Business.Services
                         consecutivo++;
                         grupo.Encabezados.Add(encabezado);
                         encabezado = new Encabezado(consecutivo);
+                        encabezado.Grupo = grupo;
 
                         nuevoEncabezado = true;
                     }
