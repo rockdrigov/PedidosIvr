@@ -5,10 +5,18 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avon.PedidosIvrTask", "Avon.PedidosIvrTask\Avon.PedidosIvrTask.csproj", "{D72A844F-475F-4747-8857-3FBF34BC44C4}"
 	ProjectSection(ProjectDependencies) = postProject
+		{FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5} = {FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5}
 		{1C257BB5-ECEC-49A6-ADB4-12481351D7D2} = {1C257BB5-ECEC-49A6-ADB4-12481351D7D2}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avon.PedidosIvr.Data", "Avon.PedidosIvr.Data\Avon.PedidosIvr.Data.csproj", "{1C257BB5-ECEC-49A6-ADB4-12481351D7D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avon.PedidosIvr.Business", "Avon.PedidosIvr.Business\Avon.PedidosIvr.Business.csproj", "{FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1C257BB5-ECEC-49A6-ADB4-12481351D7D2} = {1C257BB5-ECEC-49A6-ADB4-12481351D7D2}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Avon.PedidosIvr.Entities", "Avon.PedidosIvr.Entities\Avon.PedidosIvr.Entities.csproj", "{50715BE6-397E-4AAE-8C2B-033CED17795B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,6 +32,14 @@ Global
 		{1C257BB5-ECEC-49A6-ADB4-12481351D7D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C257BB5-ECEC-49A6-ADB4-12481351D7D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C257BB5-ECEC-49A6-ADB4-12481351D7D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAC14DB3-0CCC-47B9-A66E-2B0AEF1313F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50715BE6-397E-4AAE-8C2B-033CED17795B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50715BE6-397E-4AAE-8C2B-033CED17795B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50715BE6-397E-4AAE-8C2B-033CED17795B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50715BE6-397E-4AAE-8C2B-033CED17795B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

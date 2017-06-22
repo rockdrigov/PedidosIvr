@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Avon.PedidosIvr.Data.Entities
+namespace Avon.PedidosIvr.Entities
 {
     [Table("Pedidos")]
     public class Pedido

@@ -108,9 +108,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Avon.PedidosIvr.Data\Avon.PedidosIvr.Data.csproj">
-      <Project>{1c257bb5-ecec-49a6-adb4-12481351d7d2}</Project>
-      <Name>Avon.PedidosIvr.Data</Name>
+    <ProjectReference Include="..\Avon.PedidosIvr.Business\Avon.PedidosIvr.Business.csproj">
+      <Project>{fac14db3-0ccc-47b9-a66e-2b0aef1313f5}</Project>
+      <Name>Avon.PedidosIvr.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Avon.PedidosIvr.Entities\Avon.PedidosIvr.Entities.csproj">
+      <Project>{50715be6-397e-4aae-8c2b-033ced17795b}</Project>
+      <Name>Avon.PedidosIvr.Entities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

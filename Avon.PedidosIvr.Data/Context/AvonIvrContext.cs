@@ -1,4 +1,4 @@
-﻿using Avon.PedidosIvr.Data.Entities;
+﻿using Avon.PedidosIvr.Entities;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration.Conventions;
 
