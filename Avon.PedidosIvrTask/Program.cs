@@ -10,8 +10,7 @@ namespace Avon.PedidosIvrTask
     class Program
     {
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static PedidosService _pedidosService = new PedidosService();
-
+        private static PedidosService _pedidosService = new PedidosService(ConfigurationManager.AppSettings["RutaArchivosTemporales"]);
 
         static void Main(string[] args)
         {
@@ -21,16 +20,8 @@ namespace Avon.PedidosIvrTask
             int pedidosPorPaquete = 30;
             Int32.TryParse(ConfigurationManager.AppSettings["PedidosPorPaquete"], out pedidosPorPaquete);
 
-            var grupos = _pedidosService.GeneraGrupos(1);
-            foreach(var grupo in grupos)
-            {
-                foreach(var encabezado in grupo.Encabezados)
-                {
-                    _log.InfoFormat("Procesando archivo: {0}", encabezado.Nombre);
-                }
-            }
-            
-            _log.InfoFormat("Se procesaran {0} grupos distintos", grupos.Count);
+             int numeroPaquetesGenerados = _pedidosService.GenerarPaquetes(DateTime.Now, DateTime.Now.AddDays(-1), pedidosPorPaquete);
+            _log.InfoFormat("Se generaron {0} paquetes", numeroPaquetesGenerados);
 
             _log.Info("Procesamiento de pedidos completo");
 
