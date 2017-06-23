@@ -10,7 +10,7 @@ namespace Avon.PedidosIvrTask
     class Program
     {
         private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static PedidosService _pedidosService = new PedidosService(ConfigurationManager.AppSettings["RutaArchivosTemporales"]);
+        private static PedidosService _pedidosService = new PedidosService(ConfigurationManager.AppSettings["RutaArchivosTemporales"], ConfigurationManager.AppSettings["RutaArchivosFinales"]);
 
         static void Main(string[] args)
         {

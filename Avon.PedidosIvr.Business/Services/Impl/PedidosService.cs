@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 using System.IO;
+using Avon.PedidosIvr.Entities;
+using Avon.PedidosIvr.Business.Compresion;
 
 namespace Avon.PedidosIvr.Business.Services
 {
@@ -15,6 +17,11 @@ namespace Avon.PedidosIvr.Business.Services
         private string _rutaArchivosTemporales;
 
         /// <summary>
+        /// Ruta donde se colocará el archivo final
+        /// </summary>
+        private string _rutaArchivosFinales;
+
+        /// <summary>
         /// Repositorio para el manejo de pedidos y transacciones
         /// </summary>
         private PedidosRepository _pedidosRepository = new PedidosRepository();
@@ -23,9 +30,10 @@ namespace Avon.PedidosIvr.Business.Services
         /// 
         /// </summary>
         /// <param name="rutaArchivosTemporales"></param>
-        public PedidosService(string rutaArchivosTemporales)
+        public PedidosService(string rutaArchivosTemporales, string rutaArchivosFinales)
         {
             _rutaArchivosTemporales = rutaArchivosTemporales;
+            _rutaArchivosFinales = rutaArchivosFinales;
         }
 
         /// <summary>
@@ -47,9 +55,16 @@ namespace Avon.PedidosIvr.Business.Services
                 foreach (var encabeado in grupo.Encabezados)
                 {
                     GeneraArchivoEncabezado(encabeado);
+
+                    GeneraArchivosDetalle(encabeado);
+
                     paquetesGenerados++;
                 }
             }
+
+            var rutaArchivoZip = _rutaArchivosFinales + @"\" + String.Format("orderivr.{0:yyyy-MM-dd}.zip", DateTime.Now);
+
+            Zip.ComprimirPaquete(rutaArchivoZip, _rutaArchivosTemporales);
 
             return paquetesGenerados;
         }
@@ -106,17 +121,10 @@ namespace Avon.PedidosIvr.Business.Services
         /// <returns></returns>
         private bool GeneraArchivoEncabezado(Encabezado encabezado)
         {
-            string rutaTemporalGrupo = _rutaArchivosTemporales + @"\" + encabezado.Consecutivo.ToString("D4");
+            string rutaTemporalGrupo = _rutaArchivosTemporales + @"\";
             int consecutivoPedido = 1;
 
-            if (Directory.Exists(rutaTemporalGrupo))
-            {
-                Directory.Delete(rutaTemporalGrupo, true);
-            }
-
-            Directory.CreateDirectory(rutaTemporalGrupo);
-
-            using (FileStream archivoEncabezado = File.Create(rutaTemporalGrupo + @"\" + encabezado.Nombre))
+            using (FileStream archivoEncabezado = File.Create(rutaTemporalGrupo + encabezado.Nombre))
             {
                 using (StreamWriter streamWriter = new StreamWriter(archivoEncabezado))
                 {
@@ -127,12 +135,51 @@ namespace Avon.PedidosIvr.Business.Services
 
                     foreach (var pedido in encabezado.Pedidos)
                     {
+                        pedido.Consecutivo = consecutivoPedido;
+
                         streamWriter.Write(String.Format("{0}01{1}400{2}", encabezado.Grupo.Campana, encabezado.Consecutivo.ToString("D4"), consecutivoPedido.ToString("D2")));
                         consecutivoPedido++;
                     }
                 }
             }
             return true;
+        }
+
+        /// <summary>
+        /// Genera todos los archivos detalle pertenecientes a un encabezado
+        /// </summary>
+        /// <param name="encabezado"></param>
+        /// <returns></returns>
+        private bool GeneraArchivosDetalle(Encabezado encabezado)
+        {
+            foreach (var pedido in encabezado.Pedidos)
+            {
+                GeneraArchivosDetalle(pedido, encabezado.Consecutivo);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="pedido"></param>
+        private void GeneraArchivosDetalle(Pedido pedido, int consecutivoEncabezado)
+        {
+            var rutaTemporalGrupo = _rutaArchivosTemporales + @"\";
+            var clavePedido = String.Format("{0}01{1}4{2}", pedido.Campana, consecutivoEncabezado.ToString("D4"), pedido.Consecutivo.ToString("D4"));
+            var nombreArchivoDetalle = "ORDER." + clavePedido;
+
+            using (FileStream archivoDetalle = File.Create(rutaTemporalGrupo + nombreArchivoDetalle))
+            {
+                using (StreamWriter streamWriter = new StreamWriter(archivoDetalle))
+                {
+                    var detalleOrden = String.Format("A  101{0}{1} {2}{3}{4}{5}00000000010000000000000000000000000000000", consecutivoEncabezado.ToString("D4"), pedido.Consecutivo.ToString("D2"), BusinessUtils.GetFechaFormateada(pedido.FechaP), BusinessUtils.GetHoraFormateada(pedido.FechaP), pedido.Zona, pedido.Registro);
+
+                    streamWriter.WriteLine(clavePedido);
+                    streamWriter.WriteLine(detalleOrden);
+                }
+            }
         }
 
         /// <summary>

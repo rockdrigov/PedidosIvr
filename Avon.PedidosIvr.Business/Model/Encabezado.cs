@@ -18,7 +18,7 @@ namespace Avon.PedidosIvr.Business.Model
         {
             get
             {
-                return string.Format("ORDER.{0}019000{1}4", Convert.ToInt32(Grupo.Campana).ToString("D2"),Consecutivo.ToString("D4"));
+                return string.Format("ORDER.{0}019000{1}4", Grupo.Campana, Consecutivo.ToString("D4"));
             }
         }
         public Grupo Grupo { get; set; }

@@ -7,12 +7,22 @@ namespace Avon.PedidosIvr.Business
     {
         public static string GetFechaFormateada()
         {
-            return String.Format("{0:yyMMdd}", DateTime.Now);
+            return GetFechaFormateada(DateTime.Now);
+        }
+
+        public static string GetFechaFormateada(DateTime fecha)
+        {
+            return String.Format("{0:yyMMdd}", fecha);
         }
 
         public static string GetHoraFormateada()
         {
-            return String.Format("{0:HHmmss}", DateTime.Now);
+            return GetHoraFormateada(DateTime.Now);
+        }
+
+        public static string GetHoraFormateada(DateTime fecha)
+        {
+            return String.Format("{0:HHmmss}", fecha);
         }
 
         public static void PreparaRutaTemporal(string rutaArchivosTemporales)

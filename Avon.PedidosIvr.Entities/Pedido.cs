@@ -26,5 +26,8 @@ namespace Avon.PedidosIvr.Entities
         [Column("FechaP")]
         public DateTime FechaP { get; set; }
 
+        [NotMapped]
+        public int Consecutivo { get; set; }
+
     }
 }
