@@ -174,10 +174,39 @@ namespace Avon.PedidosIvr.Business.Services
             {
                 using (StreamWriter streamWriter = new StreamWriter(archivoDetalle))
                 {
-                    var detalleOrden = String.Format("A  101{0}{1} {2}{3}{4}{5}00000000010000000000000000000000000000000", consecutivoEncabezado.ToString("D4"), pedido.Consecutivo.ToString("D2"), BusinessUtils.GetFechaFormateada(pedido.FechaP), BusinessUtils.GetHoraFormateada(pedido.FechaP), pedido.Zona, pedido.Registro);
 
-                    streamWriter.WriteLine(clavePedido);
+                    //Encabezado
+                    var identificadorEncabezado = String.IsNullOrEmpty(pedido.ProductoClave) ? "H" : "A";
+                    var detalleOrden = String.Format("{6}  101{0}{1} {2}{3}{4}{5}00000000010000000000000000000000000000000", consecutivoEncabezado.ToString("D4"), pedido.Consecutivo.ToString("D2"), BusinessUtils.GetFechaFormateada(pedido.FechaP), BusinessUtils.GetHoraFormateada(pedido.FechaP), pedido.Zona, pedido.Registro, identificadorEncabezado);
+
+                    streamWriter.WriteLine(clavePedido + "0");
                     streamWriter.WriteLine(detalleOrden);
+
+                    //Pedido Actual
+                    if (!String.IsNullOrEmpty(pedido.ProductoClave))
+                    {
+                        streamWriter.WriteLine(clavePedido + "2");
+                        foreach(var detalleLinea in pedido.ProductoClave.Split('^'))
+                        {
+                            var linea = detalleLinea.Split(',')[0].Substring(0,5);
+                            var cantidad = detalleLinea.Split(',')[1];
+                            var lineaFormateada = String.Format("0{0}00{1}", linea, Convert.ToInt16(cantidad).ToString("D3"));
+                            streamWriter.Write(lineaFormateada);
+                        }
+                    }
+
+                    //Pedido Anterios
+                    if (!String.IsNullOrEmpty(pedido.ProductoClaveAnt.Trim()))
+                    {
+                        streamWriter.WriteLine(Environment.NewLine + clavePedido + "3");
+                        foreach (var detalleLinea in pedido.ProductoClaveAnt.Split('^'))
+                        {
+                            var linea = detalleLinea.Split(',')[0].Substring(0, 5);
+                            var cantidad = detalleLinea.Split(',')[1];
+                            var lineaFormateada = String.Format("B 000{0}00{1}0000000000000{2}01", linea, Convert.ToInt16(cantidad).ToString("D3"), Convert.ToInt16(pedido.Campana) - 1);
+                            streamWriter.WriteLine(lineaFormateada);
+                        }
+                    }
                 }
             }
         }
