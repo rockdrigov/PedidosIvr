@@ -7,7 +7,6 @@ namespace Avon.PedidosIvr.Data.Repositories.Impl
 {
     public class PedidosRepository : GenericRepository<AvonIvrContext, Transaccion, int>
     {
-
         public List<Transaccion> GetTransaccionesPorEnviar()
         {
             return this.Context.Transacciones.Where(x => x.EnviarFtp == "S").ToList();

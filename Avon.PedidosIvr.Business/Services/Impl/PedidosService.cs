@@ -11,6 +11,8 @@ namespace Avon.PedidosIvr.Business.Services
 {
     public class PedidosService
     {
+        private static readonly log4net.ILog _log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         /// <summary>
         /// Ruta donde se crearan los archivos temporales
         /// </summary>
@@ -50,23 +52,28 @@ namespace Avon.PedidosIvr.Business.Services
 
             BusinessUtils.PreparaRutaTemporal(_rutaArchivosTemporales);
 
-            foreach (var grupo in grupos)
+            if(grupos != null)
             {
-                foreach (var encabeado in grupo.Encabezados)
+                foreach (var grupo in grupos)
                 {
-                    GeneraArchivoEncabezado(encabeado);
+                    foreach (var encabeado in grupo.Encabezados)
+                    {
+                        GeneraArchivoEncabezado(encabeado);
 
-                    GeneraArchivosDetalle(encabeado);
+                        GeneraArchivosDetalle(encabeado);
 
-                    paquetesGenerados++;
+                        paquetesGenerados++;
+                    }
                 }
+
+                var rutaArchivoZip = _rutaArchivosFinales + @"\" + String.Format("orderivr.{0:yyyy-MM-dd}.zip", DateTime.Now);
+
+                Zip.ComprimirPaquete(rutaArchivoZip, _rutaArchivosTemporales);
+
+                return paquetesGenerados;
             }
 
-            var rutaArchivoZip = _rutaArchivosFinales + @"\" + String.Format("orderivr.{0:yyyy-MM-dd}.zip", DateTime.Now);
-
-            Zip.ComprimirPaquete(rutaArchivoZip, _rutaArchivosTemporales);
-
-            return paquetesGenerados;
+            return 0;
         }
 
         /// <summary>
@@ -217,11 +224,31 @@ namespace Avon.PedidosIvr.Business.Services
         /// <returns></returns>
         private List<Grupo> GetGruposPorEnviar()
         {
-            return _pedidosRepository.GetTransaccionesPorEnviar()
-                    .Select(x => new { x.Pedido.Campana, x.Pedido.Zona })
-                    .Distinct()
-                    .Select(x => new Grupo() { Campana = x.Campana, Zona = x.Zona })
-                    .ToList();
+            _log.Debug("Obteniendo Grupor para enviar");
+
+            List<Grupo> grupos;
+            var transaccionesPorEnviar = _pedidosRepository.GetTransaccionesPorEnviar();
+
+            if(transaccionesPorEnviar != null)
+            {
+                _log.DebugFormat("Se obtuvieron {0} pedidos", transaccionesPorEnviar.Count);
+
+                grupos = transaccionesPorEnviar
+                        .Select(x => new { x.Pedido.Campana, x.Pedido.Zona })
+                        .Distinct()
+                        .Select(x => new Grupo() { Campana = x.Campana, Zona = x.Zona })
+                        .ToList();
+
+                _log.DebugFormat("Se obtuvieron {0} grupos", grupos.Count);
+
+                return grupos;
+            }
+            else
+            {
+                _log.Debug("No se obtuvo ninguna transacción");
+            }
+
+            return null;
         }
     }
 }
