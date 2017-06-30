@@ -1,6 +1,7 @@
 ﻿using Avon.PedidosIvr.Data.Context;
 using Avon.PedidosIvr.Entities;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 
 namespace Avon.PedidosIvr.Data.Repositories.Impl
@@ -9,7 +10,7 @@ namespace Avon.PedidosIvr.Data.Repositories.Impl
     {
         public List<Transaccion> GetTransaccionesPorEnviar()
         {
-            return this.Context.Transacciones.Where(x => x.EnviarFtp == "S").ToList();
+            return this.Context.Transacciones.Where(x => x.EnviarFtp == "S" && x.Pedido != null).Include(x => x.Pedido).ToList();
         }
 
         public List<Transaccion> GetTransaccionesPorEnviar(string zona, string campana)
