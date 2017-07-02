@@ -20,7 +20,10 @@ namespace Avon.PedidosIvrTask
             int pedidosPorPaquete = 30;
             Int32.TryParse(ConfigurationManager.AppSettings["PedidosPorPaquete"], out pedidosPorPaquete);
 
-             int numeroPaquetesGenerados = _pedidosService.GenerarPaquetes(DateTime.Now, DateTime.Now.AddDays(-1), pedidosPorPaquete);
+            bool procesprocesaSoloPedidosDiarios = Convert.ToBoolean(ConfigurationManager.AppSettings["procesaSoloPedidosDiarios"]);
+            int horaProcesaPedidos = Convert.ToInt32(ConfigurationManager.AppSettings["horaProcesaPedidos"]);
+
+            int numeroPaquetesGenerados = _pedidosService.GenerarPaquetes(pedidosPorPaquete, procesprocesaSoloPedidosDiarios, horaProcesaPedidos);
             _log.InfoFormat("Se generaron {0} paquetes", numeroPaquetesGenerados);
 
             _log.Info("Procesamiento de pedidos completo");

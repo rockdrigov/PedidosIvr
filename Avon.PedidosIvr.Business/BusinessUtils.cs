@@ -45,5 +45,10 @@ namespace Avon.PedidosIvr.Business
                 throw new Exception("No se ha podido limpiar el directorio temporal");
             }
         }
+
+        public static DateTime GetFechaConHoraExacta(DateTime fecha, int hora)
+        {
+            return new DateTime(fecha.Year, fecha.Month, fecha.Day, hora, 0, 0);
+        }
     }
 }

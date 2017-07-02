@@ -45,9 +45,12 @@ namespace Avon.PedidosIvr.Business.Services
         /// <param name="fechaFin"></param>
         /// <param name="pedidosPorEncabezado"></param>
         /// <returns></returns>
-        public int GenerarPaquetes(DateTime fecheaInicio, DateTime fechaFin, int pedidosPorEncabezado)
+        public int GenerarPaquetes(int pedidosPorEncabezado, bool procesprocesaSoloPedidosDiarios, int horaProcesaPedidos)
         {
-            var grupos = GeneraGrupos(fecheaInicio, fechaFin, pedidosPorEncabezado);
+            var fechaInicio = procesprocesaSoloPedidosDiarios ? BusinessUtils.GetFechaConHoraExacta(DateTime.Now, 0) : BusinessUtils.GetFechaConHoraExacta(DateTime.MinValue, 0);
+            var fechaFin = procesprocesaSoloPedidosDiarios ? BusinessUtils.GetFechaConHoraExacta(DateTime.Now, horaProcesaPedidos) : BusinessUtils.GetFechaConHoraExacta(DateTime.MaxValue, 0);
+
+            var grupos = GeneraGrupos(pedidosPorEncabezado, fechaInicio, fechaFin);
             int paquetesGenerados = 0;
 
             BusinessUtils.PreparaRutaTemporal(_rutaArchivosTemporales);
@@ -78,19 +81,19 @@ namespace Avon.PedidosIvr.Business.Services
 
         /// <summary>
         /// Agrupa los pedidos por encabezados, segun el paramentro @pedidosPorEncabezado
-        /// </summary>
+        /// </summaryfechaInicio
         /// <param name="fecheaInicio"></param>
         /// <param name="fechaFin"></param>
         /// <param name="pedidosPorEncabezado">Indica el numero de pedidos que habrá por encabezado</param>
         /// <returns></returns>
-        private List<Grupo> GeneraGrupos(DateTime fecheaInicio, DateTime fechaFin, int pedidosPorEncabezado)
+        private List<Grupo> GeneraGrupos(int pedidosPorEncabezado, DateTime fechaInicio, DateTime fechaFin)
         {
-            var grupos = GetGruposPorEnviar();
+            var grupos = GetGruposPorEnviar(fechaInicio, fechaFin);
             int consecutivo = 1;
 
             foreach (var grupo in grupos)
             {
-                var transacciones = _pedidosRepository.GetTransaccionesPorEnviar(grupo.Zona, grupo.Campana);
+                var transacciones = _pedidosRepository.GetTransaccionesPorEnviar(grupo.Zona, grupo.Campana, fechaInicio, fechaFin);
                 bool nuevoEncabezado = false;
 
                 grupo.Encabezados = new List<Encabezado>();
@@ -222,12 +225,12 @@ namespace Avon.PedidosIvr.Business.Services
         /// Obtiene los distintos grupos a procesar segun la zona y camapaña
         /// </summary>
         /// <returns></returns>
-        private List<Grupo> GetGruposPorEnviar()
+        private List<Grupo> GetGruposPorEnviar(DateTime fechaInicio, DateTime fechaFin)
         {
             _log.Debug("Obteniendo Grupor para enviar");
 
             List<Grupo> grupos;
-            var transaccionesPorEnviar = _pedidosRepository.GetTransaccionesPorEnviar();
+            var transaccionesPorEnviar = _pedidosRepository.GetTransaccionesPorEnviar(fechaInicio, fechaFin);
 
             if(transaccionesPorEnviar != null)
             {
