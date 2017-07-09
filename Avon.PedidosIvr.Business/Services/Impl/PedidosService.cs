@@ -89,7 +89,9 @@ namespace Avon.PedidosIvr.Business.Services
         private List<Grupo> GeneraGrupos(int pedidosPorEncabezado, DateTime fechaInicio, DateTime fechaFin)
         {
             var grupos = GetGruposPorEnviar(fechaInicio, fechaFin);
-            int consecutivo = 1;
+
+            int consecutivoGrupo = 1;
+            int consecutivoEncabezado = 1;
 
             foreach (var grupo in grupos)
             {
@@ -97,7 +99,7 @@ namespace Avon.PedidosIvr.Business.Services
                 bool nuevoEncabezado = false;
 
                 grupo.Encabezados = new List<Encabezado>();
-                var encabezado = new Encabezado(consecutivo);
+                var encabezado = new Encabezado(consecutivoEncabezado);
                 encabezado.Grupo = grupo;
 
                 foreach (var transaccion in transacciones)
@@ -106,9 +108,9 @@ namespace Avon.PedidosIvr.Business.Services
 
                     if (encabezado.Pedidos.Count == pedidosPorEncabezado)
                     {
-                        consecutivo++;
+                        consecutivoEncabezado++;
                         grupo.Encabezados.Add(encabezado);
-                        encabezado = new Encabezado(consecutivo);
+                        encabezado = new Encabezado(consecutivoEncabezado);
                         encabezado.Grupo = grupo;
 
                         nuevoEncabezado = true;
@@ -119,6 +121,9 @@ namespace Avon.PedidosIvr.Business.Services
                 {
                     grupo.Encabezados.Add(encabezado);
                 }
+
+                grupo.Consecutivo = consecutivoGrupo;
+                consecutivoGrupo++;
             }
 
             return grupos;
@@ -140,7 +145,7 @@ namespace Avon.PedidosIvr.Business.Services
                 {
                     var fechaInicio = BusinessUtils.GetFechaFormateada();
                     var horaInicio = BusinessUtils.GetHoraFormateada();
-                    var contenidoEncabezado = String.Format("{0}019000{1}4000 101{1}4{2}Y{3}{4}", encabezado.Grupo.Campana, encabezado.Consecutivo.ToString("D4"), encabezado.Pedidos.Count, fechaInicio, horaInicio);
+                    var contenidoEncabezado = String.Format("{0}019000{1}4000{5}101{1}4{2}Y{3}{4}", encabezado.Grupo.Campana, encabezado.Consecutivo.ToString("D4"), encabezado.Pedidos.Count, fechaInicio, horaInicio, Environment.NewLine);
                     streamWriter.Write(contenidoEncabezado);
 
                     foreach (var pedido in encabezado.Pedidos)
@@ -164,7 +169,7 @@ namespace Avon.PedidosIvr.Business.Services
         {
             foreach (var pedido in encabezado.Pedidos)
             {
-                GeneraArchivosDetalle(pedido, encabezado.Consecutivo);
+                GeneraArchivosDetalle(pedido, encabezado.Grupo.Consecutivo);
             }
 
             return true;

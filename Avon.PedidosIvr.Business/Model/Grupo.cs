@@ -9,5 +9,7 @@ namespace Avon.PedidosIvr.Business.Model
         public string Campana { get; set; }
 
         public List<Encabezado> Encabezados { get; set; }
+
+        public int Consecutivo { get; set; }
     }
 }
